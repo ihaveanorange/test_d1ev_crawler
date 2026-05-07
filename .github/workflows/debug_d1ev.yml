@@ -1,0 +1,47 @@
+name: Debug D1EV Crawler
+
+on:
+  # 手动触发调试
+  workflow_dispatch:
+  # 也可以设置定时触发（可选）
+  # schedule:
+  #   - cron: '*/30 * * * *'  # 每30分钟运行一次，方便调试
+
+jobs:
+  debug-crawler:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          pip install requests feedparser
+      
+      - name: Install Playwright browsers
+        run: |
+          playwright install chromium
+          # 安装系统依赖（Playwright 在 Linux 上需要）
+          playwright install-deps chromium
+      
+      - name: Run debug script
+        run: |
+          python test_d1ev.py
+      
+      # 如果脚本有输出文件，可以上传为 Artifact 查看
+      - name: Upload debug output
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-output
+          path: |
+            *.log
+            *.json
+            *.txt
