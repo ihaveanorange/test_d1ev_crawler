@@ -38,7 +38,7 @@ jobs:
       # 如果脚本有输出文件，可以上传为 Artifact 查看
       - name: Upload debug output
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debug-output
           path: |
